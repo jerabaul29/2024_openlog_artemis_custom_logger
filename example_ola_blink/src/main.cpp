@@ -1,7 +1,6 @@
 #include <Arduino.h>
 
-#include "pins.h"
-#include "ports.h"
+#include "firmware_configuration.h"
 
 void setup() {
   pinMode(PIN_PWR_LED, OUTPUT);

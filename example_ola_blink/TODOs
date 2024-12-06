@@ -1,0 +1,7 @@
+- add time and sleep from previous project
+- rationalize / go through all the flag-based variables
+- informative print message at start
+- enable watchdog
+- support SD
+- support IMU
+- support DS18B20

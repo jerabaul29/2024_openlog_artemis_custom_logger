@@ -13,3 +13,9 @@
 [submodule "ola_temperature_logger_ds18b20/lib/kiss_clang_posix_time_utils"]
 	path = ola_temperature_logger_ds18b20/lib/kiss_clang_posix_time_utils
 	url = git@github.com:jerabaul29/kiss_clang_posix_time_utils.git
+[submodule "ola_temperature_logger_ds18b20/lib/SparkFun_I2C_GPS_Arduino_Library"]
+	path = ola_temperature_logger_ds18b20/lib/SparkFun_I2C_GPS_Arduino_Library
+	url = git@github.com:sparkfun/SparkFun_I2C_GPS_Arduino_Library.git
+[submodule "ola_temperature_logger_ds18b20/lib/TinyGPSPlus"]
+	path = ola_temperature_logger_ds18b20/lib/TinyGPSPlus
+	url = https://github.com/mikalhart/TinyGPSPlus

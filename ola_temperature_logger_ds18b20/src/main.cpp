@@ -7,6 +7,7 @@
 #include "thermistors_manager.h"
 #include "sd_manager.h"
 #include "boot_counter.h"
+#include "gnss_manager.h"
 
 void setup()
 {
@@ -46,8 +47,11 @@ void setup()
   pinMode(PIN_PWR_LED, OUTPUT);
 
   // TODO: use GPS instead!!
-  board_time_manager.set_posix_timestamp(1734344186);
+  board_time_manager.set_posix_timestamp(0);
   wdt.restart();
+
+  // seems like this GNSS does not work...
+  // set_time_from_gnss();
 
   sd_manager_instance.update_filename();
   sd_manager_instance.log_boot();

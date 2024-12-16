@@ -22,7 +22,7 @@ static constexpr int BAUD_RATE_USB {1000000};
 // I2C over qwiic
 
 // TODO: check that correct
-static constexpr int PORT_I2C_QWIIC_NUMBER {1};
+static constexpr int PORT_I2C_QWIIC_NUMBER {2};
 
 //TODO: check that correct
 static constexpr byte PIN_QWIIC_SCL {8};

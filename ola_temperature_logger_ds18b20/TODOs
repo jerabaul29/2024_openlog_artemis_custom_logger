@@ -1,0 +1,12 @@
+- GPS for fix time; if not, default to default value 2024-12-17T00:00:00
+- sleep and log pattern
+
+- consistent blinking:
+  - blue and red blink 5 times at start
+  - blue blink 1 time when take GPS, then 1 quick blink every 1s when taking GPS points
+  - blue blink 2 times when find SD card
+  - blue blink 3 times when take temperature, then 3 quick blink every 1s when taking temperature; if no valid gps time, blue and red blink 3 times
+  - blue blink 4 times when writing to sd start
+  - blue blink 5 times when go to sleep
+  - red solid on when SD card active
+  - red blink slowly during sleep

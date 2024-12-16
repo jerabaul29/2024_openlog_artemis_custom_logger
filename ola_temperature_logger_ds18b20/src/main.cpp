@@ -3,6 +3,7 @@
 #include "firmware_configuration.h"
 #include "user_configuration.h"
 #include "watchdog_manager.h"
+#include "time_manager.h"
 
 void setup() {
 
@@ -25,6 +26,9 @@ void setup() {
   wdt.restart();
 
   pinMode(PIN_PWR_LED, OUTPUT);
+
+  board_time_manager.set_posix_timestamp(1734344186);
+  wdt.restart();
 }
 
 void loop() {
@@ -36,4 +40,6 @@ void loop() {
   digitalWrite(PIN_PWR_LED, LOW);
   delay(1000);
   wdt.restart();
+
+  board_time_manager.print_posix_status();
 }

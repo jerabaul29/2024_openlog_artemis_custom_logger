@@ -1,3 +1,6 @@
 [submodule "ola_temperature_logger_ds18b20/lib/Time"]
 	path = ola_temperature_logger_ds18b20/lib/Time
 	url = git@github.com:PaulStoffregen/Time.git
+[submodule "ola_temperature_logger_ds18b20/lib/etl-arduino"]
+	path = ola_temperature_logger_ds18b20/lib/etl-arduino
+	url = git@github.com:ETLCPP/etl-arduino.git

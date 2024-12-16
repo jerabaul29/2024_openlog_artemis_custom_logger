@@ -22,17 +22,17 @@ bool TimeManager::posix_timestamp_is_valid(void) const {
 }
 
 void TimeManager::print_posix_status(void) const {
-  Serial.print(F("posix is set: "));
+  SERIAL_USB->print(F("posix is set: "));
   if (posix_is_set){
-    Serial.print(F("true"));
+    SERIAL_USB->print(F("true"));
   }
   else{
-    Serial.print(F("false"));
+    SERIAL_USB->print(F("false"));
   }
 
-  Serial.print(F(" | value = "));
-  Serial.println((long)posix_timestamp);
-  Serial.print(F("i.e.: "));
+  SERIAL_USB->print(F(" | value = "));
+  SERIAL_USB->println((long)posix_timestamp);
+  SERIAL_USB->print(F("i.e.: "));
   common_working_struct_YMDHMS = YMDHMS_from_posix_timestamp(posix_timestamp);
   serialPrintf(
     "%04d-%02d-%02d %02d:%02d:%02d",
@@ -43,7 +43,7 @@ void TimeManager::print_posix_status(void) const {
     common_working_struct_YMDHMS.minute,
     common_working_struct_YMDHMS.second
   );
-  Serial.println();
+  SERIAL_USB->println();
 }
 
 //--------------------------------------------------------------------------------

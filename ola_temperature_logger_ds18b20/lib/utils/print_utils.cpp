@@ -1,5 +1,8 @@
 #include "print_utils.h"
 
+// common printing buffer
+char serial_print_buff[serial_print_max_buffer];
+
 void print_uint64(uint64_t to_print){
     // I have tried with snprintf and associates, seem to not work with uint64_t
     // even using the special macros etc. Write my simple implementation by hand
@@ -130,4 +133,41 @@ void print_hex_u64(uint64_t data)
     snprintf(tmp, tmp_size, "%.8X", static_cast<uint32_t>(data));
     SERIAL_USB->print(tmp);
     SERIAL_USB->print(" ");
+}
+
+void serialPrintf(const char *fmt, ...) {
+  /* pointer to the variable arguments list */
+  va_list pargs;
+  /* Initialise pargs to point to the first optional argument */
+  va_start(pargs, fmt);
+  /* create the formatted data and store in buff */
+  vsnprintf(serial_print_buff, serial_print_max_buffer, fmt, pargs);
+  va_end(pargs);
+  SERIAL_USB->print(serial_print_buff);
+}
+
+void print_vector_uc(const etl::ivector<unsigned char>& vector){
+    SERIAL_USB->println(F("--------------------"));
+    SERIAL_USB->print(F("vector of unsigned char, size "));
+    SERIAL_USB->print(vector.size());
+    SERIAL_USB->print(F(" max size "));
+    SERIAL_USB->println(vector.max_size());
+
+    SERIAL_USB->print(F("content: "));
+
+    for (const unsigned char crrt_char : vector){
+        SERIAL_USB->print(F("0x"));
+        SERIAL_USB->print(crrt_char, HEX);
+        SERIAL_USB->print(F(" | "));
+    }
+    SERIAL_USB->println();
+
+    SERIAL_USB->print(F("Rock7 format content: "));
+    for (const unsigned char crrt_char : vector){
+      snprintf(serial_print_buff, serial_print_max_buffer, "%02X", crrt_char);
+      SERIAL_USB->print(serial_print_buff);
+    }
+    SERIAL_USB->println();
+
+    SERIAL_USB->println(F("--------------------"));
 }

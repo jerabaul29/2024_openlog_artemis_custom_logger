@@ -53,7 +53,7 @@ TESTING:
 // how many thermistors to use on the thermistor string, at most
 constexpr int number_of_thermistors {10};
 // duration over which sample thermistor data
-constexpr int duration_thermistor_acquisition_ms {60000};
+constexpr int duration_thermistor_acquisition_ms {6000};
 
 struct ThermistorReading{
     uint64_t id;

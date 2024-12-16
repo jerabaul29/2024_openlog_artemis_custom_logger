@@ -56,6 +56,7 @@ void Thermistors_Manager::start(void)
 
 void Thermistors_Manager::stop(void)
 {
+    SERIAL_USB->println(F("stop thermistors"));
     pinMode(PIN_DS18B20_PWR, INPUT);
     pinMode(PIN_DS18B20_DAT, INPUT);
     delay(100);

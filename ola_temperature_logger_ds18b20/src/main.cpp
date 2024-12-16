@@ -7,13 +7,23 @@
 #include "thermistors_manager.h"
 #include "sd_manager.h"
 #include "boot_counter.h"
-#include "gnss_manager.h"
+//#include "gnss_manager.h"
+#include "sleep_manager.h"
 
 void setup()
 {
   // TODO: wrap in wdt class or methods?
   wdt.configure(WDT_1HZ, 32, 32);
   wdt.start();
+
+  pinMode(PIN_PWR_LED, OUTPUT);
+  for (int i=0; i<6; i++){
+    digitalWrite(PIN_PWR_LED, HIGH);
+    delay(200);
+    digitalWrite(PIN_PWR_LED, LOW);
+    delay(200);
+  }
+  pinMode(PIN_PWR_LED, INPUT);
 
   // to set the boot number the first time
   // TODO: add to the standard USB stats
@@ -44,35 +54,57 @@ void setup()
   uint16_t crrt_boot_nbr = boot_counter_instance.get_boot_number();
   PRINTLN_VAR(crrt_boot_nbr);
 
-  pinMode(PIN_PWR_LED, OUTPUT);
-
   // TODO: use GPS instead!!
   board_time_manager.set_posix_timestamp(0);
   wdt.restart();
-
   // seems like this GNSS does not work...
   // set_time_from_gnss();
 
   sd_manager_instance.update_filename();
   sd_manager_instance.log_boot();
 
-  board_thermistors_manager.start();
-  board_thermistors_manager.perform_time_acquisition();
-  board_thermistors_manager.stop();
+  pinMode(PIN_STAT_LED, OUTPUT);
+  pinMode(PIN_PWR_LED, OUTPUT);
+  for (int i=0; i<6; i++){
+    digitalWrite(PIN_STAT_LED, HIGH);
+    digitalWrite(PIN_PWR_LED, HIGH);
+    delay(200);
+    digitalWrite(PIN_STAT_LED, LOW);
+    digitalWrite(PIN_PWR_LED, LOW);
+    delay(200);
+  }
+  pinMode(PIN_STAT_LED, INPUT);
+  pinMode(PIN_PWR_LED, INPUT);
 
-  sd_manager_instance.log_data();
+  sleep_for_seconds(20);
 }
 
 void loop()
 {
-  // we can just blink
-  digitalWrite(PIN_PWR_LED, HIGH);
-  delay(1000);
-  wdt.restart();
+  pinMode(PIN_STAT_LED, OUTPUT);
+  for (int i=0; i<3; i++){
+    digitalWrite(PIN_STAT_LED, HIGH);
+    delay(200);
+    digitalWrite(PIN_STAT_LED, LOW);
+    delay(200);
+  }
+  pinMode(PIN_STAT_LED, INPUT);
 
-  digitalWrite(PIN_PWR_LED, LOW);
-  delay(1000);
-  wdt.restart();
+  board_thermistors_manager.start();
+  board_thermistors_manager.perform_time_acquisition();
+  board_thermistors_manager.stop();
 
-  board_time_manager.print_status();
+  sd_manager_instance.update_filename();
+  sd_manager_instance.log_data();
+
+    pinMode(PIN_STAT_LED, OUTPUT);
+  for (int i=0; i<4; i++){
+    digitalWrite(PIN_STAT_LED, HIGH);
+    delay(200);
+    digitalWrite(PIN_STAT_LED, LOW);
+    delay(200);
+  }
+  pinMode(PIN_STAT_LED, INPUT);
+
+  sleep_for_seconds(15 * 60);
 }

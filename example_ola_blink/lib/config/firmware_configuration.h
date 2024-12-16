@@ -1,6 +1,13 @@
 #ifndef FIRMWARE_CONFIGURATION
 #define FIRMWARE_CONFIGURATION
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// the firmware configuration that the user should not touch
+// this includes:
+//   - hardware imposed choices (pins, ports numbers, etc)
+//   - important conventions (baudrate, I2C frequencies, etc)
+//////////////////////////////////////////////////////////////////////////////////////////
+
 #include "Arduino.h"
 #include "macro_utils.h"
 #include "print_utils.h"

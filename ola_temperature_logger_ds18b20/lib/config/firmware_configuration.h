@@ -36,9 +36,15 @@ static constexpr int PIN_PWR_LED {29};
 static constexpr int PIN_STAT_LED {19};
 
 // DS18B20
-// TODO: check what I used
 static constexpr int PIN_DS18B20_PWR {32};
 static constexpr int PIN_DS18B20_DAT {11};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// SD card pins
+
+static constexpr int SD_CS_PIN {23};
+// static constexpr int DEDICATED_SPI {0};
+static constexpr int SD_SPI_MHZ {24};  // try 12 if this does not work
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // misc

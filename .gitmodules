@@ -7,3 +7,9 @@
 [submodule "ola_temperature_logger_ds18b20/lib/OneWire"]
 	path = ola_temperature_logger_ds18b20/lib/OneWire
 	url = git@github.com:jerabaul29/OneWire.git
+[submodule "ola_temperature_logger_ds18b20/lib/SdFat"]
+	path = ola_temperature_logger_ds18b20/lib/SdFat
+	url = git@github.com:greiman/SdFat.git
+[submodule "ola_temperature_logger_ds18b20/lib/kiss_clang_posix_time_utils"]
+	path = ola_temperature_logger_ds18b20/lib/kiss_clang_posix_time_utils
+	url = git@github.com:jerabaul29/kiss_clang_posix_time_utils.git

@@ -35,6 +35,38 @@ void print_uint64(uint64_t to_print){
     }
 }
 
+void print_uint64_to_serial_print_buff(uint64_t to_print){
+    for (size_t i=0; i<serial_print_max_buffer; i++){
+        serial_print_buff[i] = '\0';
+    }
+
+    size_t crrt_index {128};
+
+    while (crrt_index < serial_print_max_buffer){
+        serial_print_buff[crrt_index] = static_cast<char>(to_print % 10 + 48);
+        to_print /= 10;
+        if (to_print == 0){
+            break;
+        }
+        else {
+            crrt_index += 1;
+        }
+    }
+
+    size_t crrt_index_reverse {0};
+    while(true){
+        serial_print_buff[crrt_index_reverse] = serial_print_buff[crrt_index];
+
+        if (crrt_index == 128){
+            break;
+        }
+        else {
+            crrt_index -= 1;
+            crrt_index_reverse += 1;
+        }
+    }
+}
+
 // for the print_hex family of functins:
 // 1 byte is represented by 2 hex chars
 // so u8 ie 1 byte is 0x + 1*2 + 1 hex chars ie 5 chars

@@ -107,10 +107,12 @@ void SD_Manager::log_boot(void)
     delay(100);
     wdt.restart();
 
-    sd_file.print(F("\n\nBOOT\n\nn"));
+    sd_file.print(F("\n\nBOOT\n\n"));
     delay(100);
     wdt.restart();
     sd_file.print(F("BOOT_done\n\n"));
+    delay(100);
+    wdt.restart();
 
     stop();
     delay(100);
@@ -119,15 +121,54 @@ void SD_Manager::log_boot(void)
 
 void SD_Manager::log_data(void)
 {
+    SERIAL_USB->println(F("start log_data..."));
+
     start();
     delay(100);
     wdt.restart();
 
-    sd_file.print(F("\n\nDATA\n\nn"));
+    sd_file.print(F("\n\nDATA-start\n\n"));
+    delay(100);
+    wdt.restart();
 
-    sd_file.print(F("DATA-done\n\n"));
+    sd_file.print(F("THERMISTORS_START\n"));
+    delay(100);
+    wdt.restart();
+
+    sd_file.print(F("THERMISTORS_POSIX_TIME_START: "));
+    print_uint64_to_serial_print_buff(board_thermistors_manager.posix_time_start);
+    sd_file.println(serial_print_buff);
+    delay(100);
+    wdt.restart();
+
+    sd_file.println(F("READING_NBR,THERMISTOR_ID,CELCIUS,"));
+
+    ThermistorReading crrt_reading;
+    for (size_t i=0; i<board_thermistors_manager.vector_of_readings.size(); i++){
+        sd_file.print(i);
+        sd_file.print(",");
+        crrt_reading = board_thermistors_manager.vector_of_readings[i];
+        print_uint64_to_serial_print_buff(crrt_reading.id);
+        sd_file.print(serial_print_buff);
+        sd_file.print(",");
+        sd_file.print(crrt_reading.reading);
+        sd_file.println(",");
+        delay(10);
+        wdt.restart();
+    }
+
+    sd_file.print(F("THERMISTORS_STOP\n\n"));
+    delay(100);
+    wdt.restart();
+
+    sd_file.print(F("DATA-stop\n\n"));
+    delay(100);
+    wdt.restart();
 
     stop();
     delay(100);
     wdt.restart();
+
+    SERIAL_USB->println("done log_data!");
+    delay(100);
 }

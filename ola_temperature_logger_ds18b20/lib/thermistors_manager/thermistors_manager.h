@@ -51,18 +51,16 @@ TESTING:
 // TODO: move to user config
 // TODO: print as part of config
 // how many thermistors to use on the thermistor string, at most
-constexpr int number_of_thermistors {2};
+constexpr int number_of_thermistors {10};
 // duration over which sample thermistor data
 constexpr int duration_thermistor_acquisition_ms {60000};
 
-using Address = byte[8];
-
-struct Thermistors_Packet{
-    long posix_timestamp;
-    uint8_t data_array[3 * number_of_thermistors];
+struct ThermistorReading{
+    uint64_t id;
+    float reading;
 };
 
-// TODO: functions to print these packets
+using Address = byte[8];
 
 class Thermistors_Manager{
     public:
@@ -87,13 +85,15 @@ class Thermistors_Manager{
         void perform_time_acquisition(void);
 
         static constexpr unsigned long duration_conversion_thermistor_ms {1000UL};
+        static constexpr int vector_of_readings_length = number_of_thermistors * duration_thermistor_acquisition_ms / duration_conversion_thermistor_ms;
 
         etl::vector<uint64_t, number_of_thermistors> vector_of_ids;
+        etl::vector<ThermistorReading, vector_of_readings_length + 20> vector_of_readings;
+        uint64_t posix_time_start {0};
 
         unsigned long start_last_conversion_ms;
 
         uint8_t reading_number {0};
-
 };
 
 extern OneWire one_wire_thermistors;

@@ -42,11 +42,16 @@ void Thermistors_Manager::start(void)
     digitalWrite(PIN_DS18B20_PWR, HIGH);
     delay(500);
 
+    // start time
+    posix_time_start = board_time_manager.get_posix_timestamp();
+
     // get the list of active thermistors
     get_ordered_thermistors_ids();
 
     // ask for one conversion to start
     request_start_thermistors_conversion();
+
+    vector_of_readings.clear();
 }
 
 void Thermistors_Manager::stop(void)
@@ -229,6 +234,8 @@ void Thermistors_Manager::collect_thermistors_conversions(void)
         SERIAL_USB->print(celsius);
         SERIAL_USB->print(" Celsius");
         SERIAL_USB->println();
+
+        vector_of_readings.push_back(ThermistorReading{crrt_id, celsius});
     }
 }
 

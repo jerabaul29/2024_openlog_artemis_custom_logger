@@ -14,6 +14,8 @@
 #include "time_manager.h"
 #include "kiss_posix_time_utils.hpp"
 
+#include "thermistors_manager.h"
+
 // which kind of card format is used
 // this is what works on my 32 GB SD card
 typedef SdFs sd_t;

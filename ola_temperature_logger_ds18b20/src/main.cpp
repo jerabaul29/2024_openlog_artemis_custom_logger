@@ -5,6 +5,7 @@
 #include "watchdog_manager.h"
 #include "time_manager.h"
 #include "thermistors_manager.h"
+#include "sd_manager.h"
 
 void setup() {
 
@@ -31,9 +32,14 @@ void setup() {
   board_time_manager.set_posix_timestamp(1734344186);
   wdt.restart();
 
+  sd_manager_instance.update_filename();
+  sd_manager_instance.log_boot();
+
   board_thermistors_manager.start();
   board_thermistors_manager.perform_time_acquisition();
   board_thermistors_manager.stop();
+
+
 }
 
 void loop() {
@@ -46,5 +52,5 @@ void loop() {
   delay(1000);
   wdt.restart();
 
-  board_time_manager.print_posix_status();
+  board_time_manager.print_status();
 }

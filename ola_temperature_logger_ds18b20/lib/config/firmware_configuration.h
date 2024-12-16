@@ -37,8 +37,8 @@ static constexpr int PIN_STAT_LED {19};
 
 // DS18B20
 // TODO: check what I used
-static constexpr int PIN_DS18B20_PWR {};
-static constexpr int PIN_DS18B20_DAT {};
+static constexpr int PIN_DS18B20_PWR {32};
+static constexpr int PIN_DS18B20_DAT {11};
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // misc

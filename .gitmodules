@@ -4,3 +4,6 @@
 [submodule "ola_temperature_logger_ds18b20/lib/etl-arduino"]
 	path = ola_temperature_logger_ds18b20/lib/etl-arduino
 	url = git@github.com:ETLCPP/etl-arduino.git
+[submodule "ola_temperature_logger_ds18b20/lib/OneWire"]
+	path = ola_temperature_logger_ds18b20/lib/OneWire
+	url = git@github.com:jerabaul29/OneWire.git

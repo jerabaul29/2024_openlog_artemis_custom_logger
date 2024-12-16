@@ -9,6 +9,7 @@
 #include "SdFat.h"
 
 #include "watchdog_manager.h"
+#include "boot_counter.h"
 
 #include "time_manager.h"
 #include "kiss_posix_time_utils.hpp"
@@ -43,7 +44,7 @@ class SD_Manager{
         // stop SD card, SPI etc
         void stop();
 
-        char sd_filename[24];  // 21 should be enough, but a bit of margin and alignment
+        char sd_filename[32];  // 28 should be enough, but a bit of margin and alignment
 
         file_t sd_file;
         sd_t sd_card;

@@ -29,7 +29,9 @@ void SD_Manager::start()
     {
         Serial.println(F("ERR cannot open file"));
 
-        while (true){};
+        while (true)
+        {
+        };
     }
 
     delay(100);
@@ -67,32 +69,40 @@ void SD_Manager::update_filename()
     kiss_calendar_time crrt_calendar_time;
     posix_to_calendar(board_time_manager.get_posix_timestamp(), &crrt_calendar_time);
 
+    uint16_t boot_number = boot_counter_instance.get_boot_number();
+
+    // BBBBB- (6 chars)
+    snprintf(&(sd_filename[0]), 5 + 1, "%05u", boot_number);
+    sd_filename[5] = '-';
     // YYYY- (5 chars)
-    snprintf(&(sd_filename[0]), 4 + 1, "%04u", crrt_calendar_time.year);
-    sd_filename[4] = '-';
+    snprintf(&(sd_filename[6]), 4 + 1, "%04u", crrt_calendar_time.year);
+    sd_filename[10] = '-';
     // MM- (3 chars)
-    snprintf(&(sd_filename[5]), 2 + 1, "%02u", crrt_calendar_time.month);
-    sd_filename[7] = '-';
-    // DDT (3 chars)
-    snprintf(&(sd_filename[8]), 2 + 1, "%02u", crrt_calendar_time.day);
-    sd_filename[10] = 'T';
-    // HH- (3 chars)
-    snprintf(&(sd_filename[11]), 2 + 1, "%02u", crrt_calendar_time.hour);
+    snprintf(&(sd_filename[11]), 2 + 1, "%02u", crrt_calendar_time.month);
     sd_filename[13] = '-';
+    // DDT (3 chars)
+    snprintf(&(sd_filename[14]), 2 + 1, "%02u", crrt_calendar_time.day);
+    sd_filename[16] = 'T';
+    // HH- (3 chars)
+    snprintf(&(sd_filename[17]), 2 + 1, "%02u", crrt_calendar_time.hour);
+    sd_filename[19] = '-';
     // MM- (3 chars)
-    snprintf(&(sd_filename[14]), 2 + 1, "%02u", crrt_calendar_time.minute);
-    sd_filename[16] = '-';
+    snprintf(&(sd_filename[20]), 2 + 1, "%02u", crrt_calendar_time.minute);
+    sd_filename[22] = '-';
     // SS. (3 chars)
-    snprintf(&(sd_filename[17]), 2 + 1, "%02u", crrt_calendar_time.second);
-    sd_filename[19] = '.';
+    snprintf(&(sd_filename[23]), 2 + 1, "%02u", crrt_calendar_time.second);
+    sd_filename[25] = '.';
     // .dat
-    sd_filename[20] = 'd';
-    sd_filename[21] = 'a';
-    sd_filename[22] = 't';
-    sd_filename[23] = '\0';
+    sd_filename[26] = 'd';
+    sd_filename[27] = 'a';
+    sd_filename[28] = 't';
+    sd_filename[29] = '\0';
+
+    SERIAL_USB->println(sd_filename);
 }
 
-void SD_Manager::log_boot(void){
+void SD_Manager::log_boot(void)
+{
     start();
     delay(100);
     wdt.restart();
@@ -107,7 +117,8 @@ void SD_Manager::log_boot(void){
     wdt.restart();
 }
 
-void SD_Manager::log_data(void){
+void SD_Manager::log_data(void)
+{
     start();
     delay(100);
     wdt.restart();

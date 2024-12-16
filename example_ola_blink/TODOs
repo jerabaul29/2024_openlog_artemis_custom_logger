@@ -1,4 +1,6 @@
 - pull good stuff from the ola ds18b0
+- have a central switch "SERIAL_USB" on or off
+- take in the time kiss utilities
 
 - add time and sleep from previous project
 - rationalize / go through all the flag-based variables

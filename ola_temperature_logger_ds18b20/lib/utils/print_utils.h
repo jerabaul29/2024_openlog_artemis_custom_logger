@@ -2,6 +2,12 @@
 #define PRINT_UTILS
 
 #include "Arduino.h"
+//#include "stdarg.h"
+
+#include "etl.h"
+#include "etl/vector.h"
+
+//#include "ard_supers/avr/dtostrf.h"
 
 #include "firmware_configuration.h"
 
@@ -34,6 +40,16 @@ void print_hex_u8(uint8_t data);
 void print_hex_u16(uint16_t data);
 void print_hex_u32(uint32_t data);
 void print_hex_u64(uint64_t data);
+
+// common printing buffer
+constexpr size_t serial_print_max_buffer = 256;
+extern char serial_print_buff[serial_print_max_buffer];
+
+// variadic serial print using printf formatting
+void serialPrintf(const char *fmt, ...);
+
+// print etl containers
+void print_vector_uc(const etl::ivector<unsigned char>& vector);
 
 
 #endif

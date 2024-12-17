@@ -51,6 +51,19 @@ void setup()
   print_all_user_configs();
   wdt.restart();
 
+  analogReadResolution(14);
+  delay(100);
+  int read_PIN_PWR_O_3 = analogRead(PIN_PWR_O_3);
+  PRINTLN_VAR(read_PIN_PWR_O_3);
+  float read_input_voltage = ((float) read_PIN_PWR_O_3) * 3.0 * 1.8 / 16348. * 1.58;
+  PRINTLN_VAR(read_input_voltage);
+
+  pinMode(PIN_QWIIC_PWR, OUTPUT);
+  digitalWrite(PIN_QWIIC_PWR, LOW);
+
+  pinMode(PIN_ICM_PWR, OUTPUT);
+  digitalWrite(PIN_ICM_PWR, LOW);
+
   uint16_t crrt_boot_nbr = boot_counter_instance.get_boot_number();
   PRINTLN_VAR(crrt_boot_nbr);
 

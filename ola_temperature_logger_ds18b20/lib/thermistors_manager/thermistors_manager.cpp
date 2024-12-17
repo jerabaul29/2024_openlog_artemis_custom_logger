@@ -117,6 +117,16 @@ void Thermistors_Manager::get_ordered_thermistors_ids(void)
         case 0x28:
             SERIAL_USB->println("  CORRECT: Chip = DS18B20");
             vector_of_ids.push_back(crrt_id);
+            pinMode(PIN_STAT_LED, OUTPUT);
+            pinMode(PIN_PWR_LED, OUTPUT);
+            digitalWrite(PIN_STAT_LED, HIGH);
+            digitalWrite(PIN_PWR_LED, HIGH);
+            delay(100);
+            digitalWrite(PIN_STAT_LED, LOW);
+            digitalWrite(PIN_PWR_LED, LOW);
+            delay(300);
+            pinMode(PIN_STAT_LED, INPUT);
+            pinMode(PIN_PWR_LED, INPUT);
             break;
         case 0x22:
             SERIAL_USB->println("  WARNING: Chip = DS1822");

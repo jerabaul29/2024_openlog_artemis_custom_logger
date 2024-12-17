@@ -19,3 +19,6 @@
 [submodule "ola_temperature_logger_ds18b20/lib/TinyGPSPlus"]
 	path = ola_temperature_logger_ds18b20/lib/TinyGPSPlus
 	url = https://github.com/mikalhart/TinyGPSPlus
+[submodule "ola_temperature_logger_ds18b20/lib/SparkFun_u-blox_GNSS_Arduino_Library"]
+	path = ola_temperature_logger_ds18b20/lib/SparkFun_u-blox_GNSS_Arduino_Library
+	url = git@github.com:sparkfun/SparkFun_u-blox_GNSS_Arduino_Library.git

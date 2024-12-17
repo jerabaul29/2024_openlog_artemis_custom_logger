@@ -9,6 +9,7 @@
 #include "boot_counter.h"
 //#include "gnss_manager.h"
 #include "sleep_manager.h"
+#include "gnss_manager.h"
 
 void setup()
 {
@@ -67,8 +68,8 @@ void setup()
   uint16_t crrt_boot_nbr = boot_counter_instance.get_boot_number();
   PRINTLN_VAR(crrt_boot_nbr);
 
-  // TODO: use GPS instead!!
   board_time_manager.set_posix_timestamp(0);
+  gnss_manager.get_a_fix();
   wdt.restart();
   // seems like this GNSS does not work...
   // set_time_from_gnss();
@@ -102,6 +103,8 @@ void loop()
     delay(200);
   }
   pinMode(PIN_STAT_LED, INPUT);
+
+  gnss_manager.get_a_fix();
 
   board_thermistors_manager.start();
   board_thermistors_manager.perform_time_acquisition();

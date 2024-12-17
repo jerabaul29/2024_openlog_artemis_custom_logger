@@ -147,3 +147,32 @@ extern "C" void am_rtc_isr(void)
 
   posix_timestamp += 1;
 }
+
+//--------------------------------------------------------------------------------
+tmElements_t common_working_time_struct;
+time_t common_working_posix_timestamp;
+struct_YMDHMS common_working_struct_YMDHMS;
+
+time_t& posix_timestamp_from_YMDHMS(int year, int month, int day, int hour, int minute, int second){
+  common_working_time_struct.Year = year - 1970; // years since 1970, so deduct 1970
+  common_working_time_struct.Month = month;  // months start from 0, so deduct 1
+  common_working_time_struct.Day = day;
+  common_working_time_struct.Hour = hour;
+  common_working_time_struct.Minute = minute;
+  common_working_time_struct.Second = second;
+
+  common_working_posix_timestamp =  makeTime(common_working_time_struct);
+  return common_working_posix_timestamp;
+}
+
+struct_YMDHMS& YMDHMS_from_posix_timestamp(time_t posix_timestamp){
+  breakTime(posix_timestamp, common_working_time_struct);
+  common_working_struct_YMDHMS.year = 1970 + static_cast<int>(common_working_time_struct.Year);
+  common_working_struct_YMDHMS.month = static_cast<int>(common_working_time_struct.Month);
+  common_working_struct_YMDHMS.day = static_cast<int>(common_working_time_struct.Day);
+  common_working_struct_YMDHMS.hour = static_cast<int>(common_working_time_struct.Hour);
+  common_working_struct_YMDHMS.minute = static_cast<int>(common_working_time_struct.Minute);
+  common_working_struct_YMDHMS.second = static_cast<int>(common_working_time_struct.Second);
+  return common_working_struct_YMDHMS;
+}
+

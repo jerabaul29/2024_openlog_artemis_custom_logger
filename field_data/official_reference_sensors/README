@@ -7,3 +7,18 @@ and more specifically:
 https://github.com/jerabaul29/2023_OMB_Malte_thermistors/blob/main/MetNo_measurement_station/00_blindern_test_station_data_gathering.py
 
 Do not copy the code from this private repo here!
+
+Note about the radiation sensor data fields nomenclature:
+
+- I: incoming
+- O: outgoing
+- S: shortwave
+- L: longwave
+- N: net
+
+Note about the sensors:
+
+- PT100 in small radiation shield: ("3205059", "34", "PT100_rs1")
+- PT100 in gib stevenson radiation shield: ("0", "1", "PT100_rs2_stevenson")
+- Apoge sensors: ("0", "XX", "A_XXX")
+- CNR4 sensors: ("0", "XX", "C_XXX")

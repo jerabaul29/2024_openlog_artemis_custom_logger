@@ -10,6 +10,12 @@ Do not copy the code from this private repo here!
 
 Note about the radiation sensor data fields nomenclature:
 
+- C: CNR4
+- A: Apoge
+
+- T: temperature
+- Q: radiation
+
 - I: incoming
 - O: outgoing
 - S: shortwave

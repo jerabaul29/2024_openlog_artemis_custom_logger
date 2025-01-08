@@ -125,6 +125,10 @@ plt.show()
 
 # %%
 
+# TODO: use the different reference temperature measurements
+# TODO: use several radiation information data
+# TODO: show wind also, plays a role in effective cooling
+
 # print it all together
 
 plt.figure()
@@ -142,6 +146,10 @@ for crrt_id in lookup_ID_to_name.keys():
 
 plt.legend()
 plt.show()
+
+# %%
+
+# TODO: statistical analysis of the mismatch
 
 # %%
 

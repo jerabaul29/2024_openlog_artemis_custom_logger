@@ -22,3 +22,6 @@
 [submodule "ola_temperature_logger_ds18b20/lib/SparkFun_u-blox_GNSS_Arduino_Library"]
 	path = ola_temperature_logger_ds18b20/lib/SparkFun_u-blox_GNSS_Arduino_Library
 	url = git@github.com:sparkfun/SparkFun_u-blox_GNSS_Arduino_Library.git
+[submodule "example_redboardartemis_XA1110/lib/SparkFun_I2C_GPS_Arduino_Library"]
+	path = example_redboardartemis_XA1110/lib/SparkFun_I2C_GPS_Arduino_Library
+	url = git@github.com:sparkfun/SparkFun_I2C_GPS_Arduino_Library.git

@@ -45,6 +45,7 @@ path_reference_data = Path.cwd() / "../official_reference_sensors/2025_01_17_dat
 # - N: net
 
 file_ref_temp = path_reference_data / "blindern_data_3205059_34_PT100_rs1_test_2025_01_07__to_2025_01_17.csv"
+# file_ref_temp = path_reference_data / "blindern_data_0_1_PT100_rs2_stevenson_test_2025_01_07__to_2025_01_17.csv"
 file_ref_solar_CQSI = path_reference_data / "blindern_data_0_15_C_QSI_test_2025_01_07__to_2025_01_17.csv"
 file_ref_solar_AQSI = path_reference_data / "blindern_data_0_4_A_QSI_test_2025_01_07__to_2025_01_17.csv"
 

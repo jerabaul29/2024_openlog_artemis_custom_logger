@@ -68,7 +68,7 @@ void setup()
   uint16_t crrt_boot_nbr = boot_counter_instance.get_boot_number();
   PRINTLN_VAR(crrt_boot_nbr);
 
-    pinMode(PIN_STAT_LED, OUTPUT);
+  pinMode(PIN_STAT_LED, OUTPUT);
   pinMode(PIN_PWR_LED, OUTPUT);
   for (int i=0; i<2; i++){
     digitalWrite(PIN_STAT_LED, HIGH);
@@ -81,10 +81,13 @@ void setup()
   pinMode(PIN_STAT_LED, INPUT);
   pinMode(PIN_PWR_LED, INPUT);
 
+  pinMode(PIN_PWR_LED, OUTPUT);
+  digitalWrite(PIN_PWR_LED, HIGH);
   sd_manager_instance.update_filename();
   sd_manager_instance.log_boot();
+  pinMode(PIN_PWR_LED, INPUT);
 
-      pinMode(PIN_STAT_LED, OUTPUT);
+  pinMode(PIN_STAT_LED, OUTPUT);
   pinMode(PIN_PWR_LED, OUTPUT);
   for (int i=0; i<3; i++){
     digitalWrite(PIN_STAT_LED, HIGH);
@@ -97,11 +100,14 @@ void setup()
   pinMode(PIN_STAT_LED, INPUT);
   pinMode(PIN_PWR_LED, INPUT);
 
+  pinMode(PIN_PWR_LED, OUTPUT);
+  digitalWrite(PIN_PWR_LED, HIGH);
   board_thermistors_manager.start();
   board_thermistors_manager.perform_time_acquisition();
   board_thermistors_manager.stop();
+  pinMode(PIN_PWR_LED, INPUT);
 
-      pinMode(PIN_STAT_LED, OUTPUT);
+  pinMode(PIN_STAT_LED, OUTPUT);
   pinMode(PIN_PWR_LED, OUTPUT);
   for (int i=0; i<4; i++){
     digitalWrite(PIN_STAT_LED, HIGH);
@@ -114,11 +120,12 @@ void setup()
   pinMode(PIN_STAT_LED, INPUT);
   pinMode(PIN_PWR_LED, INPUT);
 
+  pinMode(PIN_PWR_LED, OUTPUT);
+  digitalWrite(PIN_PWR_LED, HIGH);
   board_time_manager.set_posix_timestamp(0);
   gnss_manager.get_a_fix();
   wdt.restart();
-  // seems like this GNSS does not work...
-  // set_time_from_gnss();
+  pinMode(PIN_PWR_LED, INPUT);
 
   pinMode(PIN_STAT_LED, OUTPUT);
   pinMode(PIN_PWR_LED, OUTPUT);

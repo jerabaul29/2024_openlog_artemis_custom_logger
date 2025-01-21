@@ -239,7 +239,6 @@ def scatter_with_trend(x, y):
 
     plt.plot([minx, maxx], [linear_fit(minx), linear_fit(maxx)], color="red", linewidth=3, label=f"R-squared: {rsquared:.2f} | slope: {slope:.2f}")
 
-
 # %%
 
 plt.figure()
@@ -250,6 +249,75 @@ plt.xlabel("proto: IR-ambient")
 
 plt.legend()
 
+plt.show()
+
+# %%
+
+
+def plot_hist_mismatch(predictor, target, label_base="", bins=30, color=None):
+    mismatch = target - predictor
+    mismatch_mean = np.mean(mismatch)
+    mismatch_std = np.std(mismatch)
+    mismatch_skew = sp.stats.skew(mismatch)
+    mean_linewidth = 2
+    if color is None:
+        plt.hist(mismatch, bins=bins, label=label_base + f" err: mean: {mismatch_mean:.2f}; std: {mismatch_std:.2f}; skew: {mismatch_skew:.2f}", histtype=u'step')
+        plt.axvline(mismatch_mean, linewidth=mean_linewidth)
+    else:
+        plt.hist(mismatch, bins=bins, label=label_base + f" err: mean: {mismatch_mean:.2f}; std: {mismatch_std:.2f}; skew: {mismatch_skew:.2f}", histtype=u'step', color=color)
+        plt.axvline(mismatch_mean, color=color, linewidth=mean_linewidth)
+
+    plt.xlabel("mismatch")
+    plt.ylabel("count")
+
+
+# %%
+
+# how does it look with and without the simple calibration?
+# method 1: do 2 calibration one after the other
+# 1) linear calibration proto ir vs. steinar ir
+plt.figure()
+scatter_with_trend(pd_newtimes["proto_ir"], pd_newtimes["steinarbox_ir"])
+plt.xlabel("proto_ir")
+plt.ylabel("steinar_ir")
+plt.show()
+#
+slope_1, intercept_1, rsq_1, pvl_1, std_1 = sp.stats.linregress(pd_newtimes["proto_ir"], pd_newtimes["steinarbox_ir"])
+pd_newtimes["proto_ir_cal1"] = intercept_1 + slope_1 * pd_newtimes["proto_ir"]
+#
+print(f"{slope_1 = }")
+print(f"{intercept_1 = }")
+# 2) linear calibration to effect of proto_ir - proto_air
+plt.figure()
+scatter_with_trend(pd_newtimes["proto_ir"]-pd_newtimes["proto_air"], pd_newtimes["steinarbox_ir"]-pd_newtimes["proto_ir_cal1"])
+plt.xlabel("proto_ir")
+plt.ylabel("steinar_ir")
+plt.show()
+#
+slope_2, intercept_2, rsq_2, pvl_2, std_2 = sp.stats.linregress(pd_newtimes["proto_ir"]-pd_newtimes["proto_air"], pd_newtimes["steinarbox_ir"]-pd_newtimes["proto_ir_cal1"])
+pd_newtimes["proto_ir_cal1_cal2"] = pd_newtimes["proto_ir_cal1"] + intercept_2 + slope_2 * (pd_newtimes["proto_ir"]-pd_newtimes["proto_air"])
+#
+print(f"{slope_2 = }")
+print(f"{intercept_2 = }")
+
+# TODO: method 2: do a bilinear calibration at once; linear regression? other? may be more sensitive to spurious effects, start from a given point?
+
+plt.figure()
+
+plt.hist(pd_newtimes["proto_ir"] - pd_newtimes["steinarbox_ir"], bins=20, label="uncalibrated")
+plt.hist(pd_newtimes["proto_ir_cal1"] - pd_newtimes["steinarbox_ir"], bins=20, label="cal_1")
+plt.hist(pd_newtimes["proto_ir_cal1_cal2"] - pd_newtimes["steinarbox_ir"], bins=20, label="cal_2")
+
+plt.xlabel("error (degrees C) proto vs. steinar")
+plt.legend()
+
+plt.show()
+
+plt.figure()
+plot_hist_mismatch(pd_newtimes["proto_ir"], pd_newtimes["steinarbox_ir"], bins=20, label_base="uncalibrated", color="r")
+plot_hist_mismatch(pd_newtimes["proto_ir_cal1"], pd_newtimes["steinarbox_ir"], bins=20, label_base="cal_1", color="orange")
+plot_hist_mismatch(pd_newtimes["proto_ir_cal1_cal2"], pd_newtimes["steinarbox_ir"], bins=20, label_base="cal_2", color="k")
+plt.legend()
 plt.show()
 
 # %%

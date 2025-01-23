@@ -314,10 +314,10 @@ plt.legend()
 plt.show()
 
 plt.figure()
-plot_hist_mismatch(pd_newtimes["proto_ir"], pd_newtimes["steinarbox_ir"], bins=20, label_base="uncalibrated", color="r")
-plot_hist_mismatch(pd_newtimes["proto_ir_cal1"], pd_newtimes["steinarbox_ir"], bins=20, label_base="cal_1", color="orange")
-plot_hist_mismatch(pd_newtimes["proto_ir_cal1_cal2"], pd_newtimes["steinarbox_ir"], bins=20, label_base="cal_2", color="k")
-plt.legend()
+plot_hist_mismatch(pd_newtimes["proto_ir"], pd_newtimes["steinarbox_ir"], bins=30, label_base="uncalibrated", color="r")
+plot_hist_mismatch(pd_newtimes["proto_ir_cal1"], pd_newtimes["steinarbox_ir"], bins=30, label_base="cal_1", color="orange")
+plot_hist_mismatch(pd_newtimes["proto_ir_cal1_cal2"], pd_newtimes["steinarbox_ir"], bins=30, label_base="cal_2", color="k")
+plt.legend(loc="lower left",  framealpha=0.99)
 plt.show()
 
 # %%

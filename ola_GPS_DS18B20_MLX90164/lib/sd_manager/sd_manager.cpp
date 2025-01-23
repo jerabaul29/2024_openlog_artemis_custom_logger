@@ -161,6 +161,33 @@ void SD_Manager::log_data(void)
     delay(100);
     wdt.restart();
 
+    //
+    sd_file.print(F("IRSENSOR_START\n"));
+    delay(100);
+    wdt.restart();
+
+    sd_file.println(F("READING_NBR,POSIX_TIMESTAMP,IR_TEMP,SENSOR_TEMP,"));
+
+    MLX_Information crrt_reading_mlx;
+    for (size_t i=0; i<mlx90164_manager.crrt_accumulator_MLX.size(); i++){
+        sd_file.print(i);
+        sd_file.print(",");
+        crrt_reading_mlx = mlx90164_manager.crrt_accumulator_MLX[i];
+        sd_file.print(crrt_reading_mlx.posix_timestamp);
+        sd_file.print(",");
+        sd_file.print(crrt_reading_mlx.ir_temperature);
+        sd_file.print(",");
+        sd_file.print(crrt_reading_mlx.sensor_temperature);
+        sd_file.println(",");
+        delay(10);
+        wdt.restart();
+    }
+
+    sd_file.print(F("IRSENSOR_STOP\n\n"));
+    delay(100);
+    wdt.restart();
+    //
+
     sd_file.print(F("DATA-stop\n\n"));
     delay(100);
     wdt.restart();

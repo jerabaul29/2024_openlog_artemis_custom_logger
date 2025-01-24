@@ -19,6 +19,10 @@ void print_firmware_config(void){
     SERIAL_USB->print(F(git_branch));
     SERIAL_USB->print(F(" | commit ID: "));
     SERIAL_USB->println(F(commit_id));
+    SERIAL_USB->print(F("repo basename: "));
+    SERIAL_USB->println(F(repo_basename));
+    SERIAL_USB->print(F("project name: "));
+    SERIAL_USB->println(F(project_name));
     delay(10);
 
     // show information about who compiled

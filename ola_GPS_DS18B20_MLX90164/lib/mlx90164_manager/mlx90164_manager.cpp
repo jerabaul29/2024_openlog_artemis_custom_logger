@@ -6,6 +6,8 @@ TwoWireArtemis WireArtemis;
 void turn_mlx_on(void){
     pinMode(PIN_QWIIC_PWR, OUTPUT);
     digitalWrite(PIN_QWIIC_PWR, HIGH);
+    delay(1000);
+    wdt.restart();
 }
 
 void turn_mlx_off(void){
@@ -48,10 +50,19 @@ bool MLX90164_Manager::acquire_n_readings(size_t nbr_readings){
     WireArtemis.begin();
     wdt.restart();
 
-    if (therm.begin() == false){ // Initialize the MLX90614
-        SERIAL_USB->println(F("Qwiic IR thermometer did not start; aborting"));
-        turn_mlx_off();
-        return false;
+    for (int i=0; i<5; i++){
+        if (therm.begin() == false){ // Initialize the MLX90614
+            SERIAL_USB->println(F("Qwiic IR thermometer did not start; aborting"));
+            delay(1000);
+
+            if (i==4){
+                turn_mlx_off();
+                return false;
+            }
+        }
+        else {
+            break;
+        }
     }
     SERIAL_USB->println(F("Qwiic IR thermometer started"));
     wdt.restart();

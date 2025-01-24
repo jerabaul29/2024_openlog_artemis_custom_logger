@@ -60,6 +60,8 @@ static constexpr int SD_PWR {15};
 
 static constexpr char commit_id[] {STRINGIFY_CONTENT(REPO_COMMIT_ID)};
 static constexpr char git_branch[] {STRINGIFY_CONTENT(REPO_GIT_BRANCH)};
+static constexpr char repo_basename[] {STRINGIFY_CONTENT(REPO_BASENAME)};
+static constexpr char project_name[] {STRINGIFY_CONTENT(PROJECT_NAME)};
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // functions

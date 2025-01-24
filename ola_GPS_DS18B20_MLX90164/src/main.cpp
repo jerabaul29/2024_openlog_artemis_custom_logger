@@ -26,9 +26,18 @@ void setup()
   }
   pinMode(PIN_PWR_LED, INPUT);
 
-  // to set the boot number the first time
-  // TODO: add to the standard USB stats
-  // boot_counter_instance.set_boot_number(0);
+  if (USE_SERIAL_PRINT)
+  {
+    SERIAL_USB->begin(BAUD_RATE_USB);
+    delay(100);
+  }
+
+  // to set the boot number the first time if you want this to start at 0
+  // if doing so, you MUST remember to put if to false being any real deployment!
+  if (false){
+    boot_counter_instance.set_boot_number(0);    
+    SERIAL_USB->println(F("WARNING!! set_boot_number is active; only for setting to 0 or small test"));
+  }
   delay(100);
   wdt.restart();
 
@@ -36,12 +45,6 @@ void setup()
   boot_counter_instance.increment_boot_number();
   delay(100);
   wdt.restart();
-
-  if (USE_SERIAL_PRINT)
-  {
-    SERIAL_USB->begin(BAUD_RATE_USB);
-    delay(100);
-  }
 
   print_firmware_config();
   wdt.restart();

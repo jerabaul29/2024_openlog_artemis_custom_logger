@@ -67,6 +67,8 @@ void setup()
   // TEMP_K for Kelvin.
 
   pinMode(LED_BUILTIN, OUTPUT); // LED pin as output
+
+  delay(10000);
 }
 
 void loop() 
@@ -87,4 +89,29 @@ void loop()
   }
   digitalWrite(LED_BUILTIN, LOW);
   delay(1000);
+
+  Serial.println(F("enter sleep..."));
+  therm.sleep();
+  delay(5000);
+
+  Serial.println(F("exit sleep..."));
+  therm.wake();
+  delay(1000);
+
+  WireArtemis.begin(); //Join I2C bus
+  
+  if (therm.begin() == false){ // Initialize the MLX90614
+    Serial.println("Qwiic IR thermometer did not acknowledge! Freezing!");
+    while(1);
+  }
+  Serial.println("Qwiic IR thermometer acknowledged.");
+
+  delay(5000);
+  
+  if (therm.readID()) // Read from the ID registers
+  { // If the read succeeded, print the ID:
+    Serial.println("ID: 0x" + 
+                   String(therm.getIDH(), HEX) +
+                   String(therm.getIDL(), HEX));
+  }
 }

@@ -119,7 +119,7 @@ for crrt_id in lookup_ID_to_name.keys():
     pd_proto_data_crrt_sensor = pd_proto_data[pd_proto_data["THERMISTOR_ID"] == crrt_id]
     pd_proto_data_crrt_sensor_name = lookup_ID_to_name[crrt_id]
 
-    plt.plot(pd_proto_data_crrt_sensor["Timestamp"], pd_proto_data_crrt_sensor["CELCIUS"], label=pd_proto_data_crrt_sensor_name)
+    plt.plot(pd_proto_data_crrt_sensor["Timestamp"], pd_proto_data_crrt_sensor["CELCIUS"], label=pd_proto_data_crrt_sensor_name, marker="*")
 
 plt.legend()
 plt.show()
@@ -136,14 +136,16 @@ plt.figure()
 
 plt.plot(pd_ref_temp["Timestamp"], pd_ref_temp["Value"].to_numpy(), label="temp (C)")
 
-plt.plot(pd_ref_CQSI["Timestamp"], pd_ref_CQSI["Value"].to_numpy(), label="CQSI (W/m2)")
-plt.plot(pd_ref_AQSI["Timestamp"], pd_ref_AQSI["Value"].to_numpy(), label="AQSI (W/m2)")
+plt.plot(pd_ref_CQSI["Timestamp"], pd_ref_CQSI["Value"].to_numpy()/100.0, label="CQSI (W/m2) / 100")
+plt.plot(pd_ref_AQSI["Timestamp"], pd_ref_AQSI["Value"].to_numpy()/100.0, label="AQSI (W/m2) / 100")
 
 for crrt_id in lookup_ID_to_name.keys():
     pd_proto_data_crrt_sensor = pd_proto_data[pd_proto_data["THERMISTOR_ID"] == crrt_id]
     pd_proto_data_crrt_sensor_name = lookup_ID_to_name[crrt_id]
 
-    plt.plot(pd_proto_data_crrt_sensor["Timestamp"], pd_proto_data_crrt_sensor["CELCIUS"], label=pd_proto_data_crrt_sensor_name)
+    plt.plot(pd_proto_data_crrt_sensor["Timestamp"], pd_proto_data_crrt_sensor["CELCIUS"], label=pd_proto_data_crrt_sensor_name, marker="*")
+
+plt.ylim([-15, 15])
 
 plt.legend()
 plt.show()

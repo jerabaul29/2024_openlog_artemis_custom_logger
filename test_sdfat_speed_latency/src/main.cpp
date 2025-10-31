@@ -21,8 +21,8 @@ void setup() {
   pinMode(PIN_PWR_LED, OUTPUT);
   pinMode(PIN_STAT_LED, OUTPUT);
   
-  Serial.println("\n=== SDfat Speed & Latency Test ===");
-  Serial.println("Testing with 512-byte buffers\n");
+  Serial.println(F("\n=== SDfat Speed & Latency Test ==="));
+  Serial.println(F("Testing with 512-byte buffers\n"));
   
   // Fill buffer with test pattern
   for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -57,9 +57,9 @@ void setup() {
     }
   }
   
-  Serial.print("Writing ");
+  Serial.print(F("Writing "));
   Serial.print(NUM_WRITES);
-  Serial.println(" buffers...\n");
+  Serial.println(F(" buffers...\n"));
   
   // Perform write test
   digitalWrite(PIN_PWR_LED, HIGH);
@@ -80,8 +80,8 @@ void setup() {
   digitalWrite(PIN_PWR_LED, LOW);
   
   // Calculate and display statistics
-  Serial.println("=== Write Latency Results ===");
-  Serial.println("Write#\tBefore(us)\tAfter(us)\tLatency(us)");
+  Serial.println(F("=== Write Latency Results ==="));
+  Serial.println(F("Write#\tBefore(us)\tAfter(us)\tLatency(us)"));
   
   uint32_t total_latency = 0;
   uint32_t min_latency = 0xFFFFFFFF;
@@ -110,35 +110,35 @@ void setup() {
   uint32_t total_time = timestamps_after[NUM_WRITES-1] - timestamps_before[0];
   float throughput_kbps = (total_bytes * 1000.0) / total_time;
   
-  Serial.println("\n=== Summary ===");
-  Serial.print("Total writes: ");
+  Serial.println(F("\n=== Summary ==="));
+  Serial.print(F("Total writes: "));
   Serial.println(NUM_WRITES);
-  Serial.print("Buffer size: ");
+  Serial.print(F("Buffer size: "));
   Serial.print(BUFFER_SIZE);
-  Serial.println(" bytes");
-  Serial.print("Total data: ");
+  Serial.println(F(" bytes"));
+  Serial.print(F("Total data: "));
   Serial.print(total_bytes);
-  Serial.println(" bytes");
-  Serial.print("Total time: ");
+  Serial.println(F(" bytes"));
+  Serial.print(F("Total time: "));
   Serial.print(total_time);
-  Serial.println(" us");
-  Serial.print("Sync time: ");
+  Serial.println(F(" us"));
+  Serial.print(F("Sync time: "));
   Serial.print(sync_end - sync_start);
-  Serial.println(" us");
-  Serial.print("Average latency: ");
+  Serial.println(F(" us"));
+  Serial.print(F("Average latency: "));
   Serial.print(avg_latency);
-  Serial.println(" us");
-  Serial.print("Min latency: ");
+  Serial.println(F(" us"));
+  Serial.print(F("Min latency: "));
   Serial.print(min_latency);
-  Serial.println(" us");
-  Serial.print("Max latency: ");
+  Serial.println(F(" us"));
+  Serial.print(F("Max latency: "));
   Serial.print(max_latency);
-  Serial.println(" us");
-  Serial.print("Throughput: ");
+  Serial.println(F(" us"));
+  Serial.print(F("Throughput: "));
   Serial.print(throughput_kbps);
-  Serial.println(" KB/s");
+  Serial.println(F(" KB/s"));
   
-  Serial.println("\n=== All Timestamps (us) ===");
+  Serial.println(F("\n=== All Timestamps (us) ==="));
   for (int i = 0; i < NUM_WRITES; i++) {
     Serial.print(timestamps_before[i]);
     Serial.print(",");
@@ -146,7 +146,7 @@ void setup() {
     delayMicroseconds(10);
   }
   
-  Serial.println("\n=== Test Complete ===");
+  Serial.println(F("\n=== Test Complete ==="));
 }
 
 void loop() {

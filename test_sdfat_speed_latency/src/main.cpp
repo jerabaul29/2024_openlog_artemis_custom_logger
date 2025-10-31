@@ -74,6 +74,9 @@ void setup() {
   sd_card_manager.close_and_sync_file();
   uint32_t sync_end = micros();
   
+  // Stop SD card manager
+  sd_card_manager.stop();
+  
   digitalWrite(PIN_PWR_LED, LOW);
   
   // Calculate and display statistics

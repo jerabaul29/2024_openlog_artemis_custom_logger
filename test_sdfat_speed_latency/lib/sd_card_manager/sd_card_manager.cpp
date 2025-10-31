@@ -2,10 +2,30 @@
 
 SD_Card_Manager sd_card_manager;
 
+void microSDPowerOn()
+{
+    delay(10);
+    SERIAL_USB->println("Turning SD card power ON...");
+    pinMode(SD_PWR, OUTPUT);
+    digitalWrite(SD_PWR, LOW);
+    delay(250);  // Wait for SD card to power up
+}
+
+void microSDPowerOff()
+{
+    delay(10);
+    SERIAL_USB->println("Turning SD card power OFF...");
+    pinMode(SD_PWR, OUTPUT);
+    digitalWrite(SD_PWR, HIGH);
+    delay(10);
+}
+
 bool SD_Card_Manager::start() {
     if (sd_initialized) {
         return true;
     }
+    
+    microSDPowerOn();
     
     SERIAL_USB->println("Initializing SD card...");
     
@@ -56,6 +76,8 @@ void SD_Card_Manager::stop() {
         sd_initialized = false;
         SERIAL_USB->println("SD card stopped");
     }
+    
+    microSDPowerOff();
 }
 
 bool SD_Card_Manager::preallocate_and_open_file(const char* filename, uint32_t size_bytes) {
@@ -73,7 +95,7 @@ bool SD_Card_Manager::preallocate_and_open_file(const char* filename, uint32_t s
     
     // Try to remove old file first
     if (sd_card.exists(filename)) {
-        SERIAL_USB->println("Removing old file...");
+        SERIAL_USB->println("WARNING: Removing old file...");
         sd_card.remove(filename);
     }
     

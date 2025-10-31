@@ -4,6 +4,23 @@ Copied from the base template 2025-10-31.
 
 This program tests the write latency and throughput of the SDfat library on the OpenLog Artemis board.
 
+Hardware: the OpenLogArtemis, and a SD card I had lying around (SP Superior PRO micro SD HC I |3| (10) 16GB, probably some older Silicon Power SD card). The exact SD card used may have quite a bit to say!
+
+Results of the tests, with pre allocation:
+
+```
+=== Summary ===
+Total writes: 10000
+Buffer size: 512 bytes
+Total data: 5120000 bytes
+Total time: 79771942 us
+Sync time: 118 us
+Average latency: 7973 us
+Min latency: 7971 us
+Max latency: 9196 us
+Throughput: 64.18 KB/s
+```
+
 ### Test Configuration
 
 - **Buffer size**: 512 bytes

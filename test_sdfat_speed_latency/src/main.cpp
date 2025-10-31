@@ -122,6 +122,7 @@ void setup() {
     // Don't fail - continue without preallocation
   } else {
     Serial.println("File preallocated successfully");
+    testFile.sync();  // Ensure FAT is updated
   }
   
   Serial.print("Writing ");

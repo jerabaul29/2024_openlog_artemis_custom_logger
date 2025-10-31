@@ -28,3 +28,12 @@
 [submodule "test_sdfat_speed_latency/lib/SdFat"]
 	path = test_sdfat_speed_latency/lib/SdFat
 	url = https://github.com/greiman/SdFat.git
+[submodule "template_ola_development/lib/etl-arduino"]
+	path = template_ola_development/lib/etl-arduino
+	url = https://github.com/ETLCPP/etl-arduino.git
+[submodule "template_ola_development/lib/SdFat"]
+	path = template_ola_development/lib/SdFat
+	url = https://github.com/greiman/SdFat.git
+[submodule "template_ola_development/lib/kiss_clang_posix_time_utils"]
+	path = template_ola_development/lib/kiss_clang_posix_time_utils
+	url = https://github.com/jerabaul29/kiss_clang_posix_time_utils.git

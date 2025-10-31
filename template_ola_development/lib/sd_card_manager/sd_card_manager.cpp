@@ -8,43 +8,43 @@
 // Global instance
 SD_Card_Manager sd_card_manager;
 
-/**
- * @brief Turn on SD card power
- * 
- * Sets the SD_PWR pin LOW (active low) to enable SD card power,
- * then waits for the card to stabilize.
- */
-void microSDPowerOn()
-{
-    SERIAL_USB->println(F("Turning SD card power ON..."));
-    pinMode(SD_PWR, OUTPUT);
-    digitalWrite(SD_PWR, LOW);
-    delay(250);
-}
+// /**
+//  * @brief Turn on SD card power
+//  * 
+//  * Sets the SD_PWR pin LOW (active low) to enable SD card power,
+//  * then waits for the card to stabilize.
+//  */
+// void microSDPowerOn()
+// {
+//     SERIAL_USB->println(F("Turning SD card power ON..."));
+//     pinMode(SD_PWR, OUTPUT);
+//     digitalWrite(SD_PWR, LOW);
+//     delay(250);
+// }
 
-/**
- * @brief Turn off SD card power
- * 
- * Sets the SD_PWR pin HIGH to disable SD card power.
- */
-void microSDPowerOff()
-{
-    pinMode(SD_PWR, OUTPUT);
-    digitalWrite(SD_PWR, HIGH);
-}
+// /**
+//  * @brief Turn off SD card power
+//  * 
+//  * Sets the SD_PWR pin HIGH to disable SD card power.
+//  */
+// void microSDPowerOff()
+// {
+//     pinMode(SD_PWR, OUTPUT);
+//     digitalWrite(SD_PWR, HIGH);
+// }
 
 bool SD_Card_Manager::start() {
     if (sd_initialized) {
         return true;
     }
     
-    pinMode(SD_PWR, OUTPUT);
+    // pinMode(SD_PWR, OUTPUT);
     pinMode(SD_CS_PIN, OUTPUT);
     digitalWrite(SD_CS_PIN, HIGH);
     
     delay(1);
     
-    microSDPowerOn();
+    // microSDPowerOn();
     
     SERIAL_USB->println(F("Initializing SD card..."));
     
@@ -59,7 +59,7 @@ bool SD_Card_Manager::start() {
         SERIAL_USB->println(sd_card.card()->errorData(), HEX);
         
         // Turn off power on failure
-        microSDPowerOff();
+        // microSDPowerOff();
         return false;
     }
     
@@ -99,7 +99,7 @@ void SD_Card_Manager::stop() {
         SERIAL_USB->println(F("SD card stopped"));
     }
     
-    microSDPowerOff();
+    // microSDPowerOff();
 }
 
 bool SD_Card_Manager::preallocate_and_open_file(const char* filename, uint32_t size_bytes) {

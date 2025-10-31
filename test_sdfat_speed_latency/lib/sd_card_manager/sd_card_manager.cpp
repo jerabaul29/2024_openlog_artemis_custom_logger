@@ -1,7 +1,19 @@
+/**
+ * @file sd_card_manager.cpp
+ * @brief Implementation of SD Card Manager
+ */
+
 #include "sd_card_manager.h"
 
+// Global instance
 SD_Card_Manager sd_card_manager;
 
+/**
+ * @brief Turn on SD card power
+ * 
+ * Sets the SD_PWR pin LOW (active low) to enable SD card power,
+ * then waits for the card to stabilize.
+ */
 void microSDPowerOn()
 {
     delay(10);
@@ -11,6 +23,11 @@ void microSDPowerOn()
     delay(250);  // Wait for SD card to power up
 }
 
+/**
+ * @brief Turn off SD card power
+ * 
+ * Sets the SD_PWR pin HIGH to disable SD card power.
+ */
 void microSDPowerOff()
 {
     delay(10);
@@ -38,6 +55,9 @@ bool SD_Card_Manager::start() {
         SERIAL_USB->println(sd_card.card()->errorCode(), HEX);
         SERIAL_USB->print(F("Error data: "));
         SERIAL_USB->println(sd_card.card()->errorData(), HEX);
+        
+        // Turn off power on failure
+        microSDPowerOff();
         return false;
     }
     

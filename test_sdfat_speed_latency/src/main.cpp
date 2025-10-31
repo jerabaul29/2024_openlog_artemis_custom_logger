@@ -1,10 +1,25 @@
+/**
+ * @file main.cpp
+ * @brief SD Card Speed and Latency Test for OpenLog Artemis
+ * 
+ * This program tests the write performance of the SD card by writing
+ * multiple 512-byte buffers and measuring microsecond timestamps before
+ * and after each write operation. Results include latency statistics
+ * and throughput measurements.
+ */
+
 #include <Arduino.h>
 #include "firmware_configuration.h"
 #include "sd_card_manager.h"
 
-// Test configuration
-#define BUFFER_SIZE 512
-#define NUM_WRITES 10000
+// Test configuration constants
+#define BUFFER_SIZE 512           ///< Size of write buffer (SD card sector size)
+#define NUM_WRITES 10000          ///< Number of write operations to perform
+
+// Timing constants
+static constexpr uint32_t SERIAL_TIMEOUT_MS = 5000;      ///< Max wait for serial connection
+static constexpr uint32_t ERROR_BLINK_DELAY_MS = 100;    ///< Delay for error blink pattern
+static constexpr uint32_t SERIAL_PRINT_DELAY_US = 10;    ///< Delay between serial prints
 
 // Buffer for writing
 uint8_t buffer[BUFFER_SIZE];
@@ -15,14 +30,14 @@ uint32_t timestamps_after[NUM_WRITES];
 
 void setup() {
   // Initialize serial
-  Serial.begin(1000000);
-  while (!Serial && millis() < 5000);
+  SERIAL_USB->begin(BAUD_RATE_USB);
+  while (!(*SERIAL_USB) && millis() < SERIAL_TIMEOUT_MS);
   
   pinMode(PIN_PWR_LED, OUTPUT);
   pinMode(PIN_STAT_LED, OUTPUT);
   
-  Serial.println(F("\n=== SDfat Speed & Latency Test ==="));
-  Serial.println(F("Testing with 512-byte buffers\n"));
+  SERIAL_USB->println(F("\n=== SDfat Speed & Latency Test ==="));
+  SERIAL_USB->println(F("Testing with 512-byte buffers\n"));
   
   // Fill buffer with test pattern
   for (int i = 0; i < BUFFER_SIZE; i++) {
@@ -35,9 +50,9 @@ void setup() {
     digitalWrite(PIN_STAT_LED, LOW);
     while (1) {
       digitalWrite(PIN_PWR_LED, HIGH);
-      delay(100);
+      delay(ERROR_BLINK_DELAY_MS);
       digitalWrite(PIN_PWR_LED, LOW);
-      delay(100);
+      delay(ERROR_BLINK_DELAY_MS);
     }
   }
   digitalWrite(PIN_STAT_LED, LOW);
@@ -51,15 +66,15 @@ void setup() {
   if (!sd_card_manager.preallocate_and_open_file("LATENCY.BIN", preallocSize)) {
     while (1) {
       digitalWrite(PIN_PWR_LED, HIGH);
-      delay(100);
+      delay(ERROR_BLINK_DELAY_MS);
       digitalWrite(PIN_PWR_LED, LOW);
-      delay(100);
+      delay(ERROR_BLINK_DELAY_MS);
     }
   }
   
-  Serial.print(F("Writing "));
-  Serial.print(NUM_WRITES);
-  Serial.println(F(" buffers...\n"));
+  SERIAL_USB->print(F("Writing "));
+  SERIAL_USB->print(NUM_WRITES);
+  SERIAL_USB->println(F(" buffers...\n"));
   
   // Perform write test
   digitalWrite(PIN_PWR_LED, HIGH);
@@ -80,8 +95,8 @@ void setup() {
   digitalWrite(PIN_PWR_LED, LOW);
   
   // Calculate and display statistics
-  Serial.println(F("=== Write Latency Results ==="));
-  Serial.println(F("Write#\tBefore(us)\tAfter(us)\tLatency(us)"));
+  SERIAL_USB->println(F("=== Write Latency Results ==="));
+  SERIAL_USB->println(F("Write#\tBefore(us)\tAfter(us)\tLatency(us)"));
   
   uint32_t total_latency = 0;
   uint32_t min_latency = 0xFFFFFFFF;
@@ -94,14 +109,14 @@ void setup() {
     if (latency < min_latency) min_latency = latency;
     if (latency > max_latency) max_latency = latency;
     
-    Serial.print(i);
-    Serial.print("\t");
-    Serial.print(timestamps_before[i]);
-    Serial.print("\t");
-    Serial.print(timestamps_after[i]);
-    Serial.print("\t");
-    Serial.println(latency);
-    delayMicroseconds(10);
+    SERIAL_USB->print(i);
+    SERIAL_USB->print("\t");
+    SERIAL_USB->print(timestamps_before[i]);
+    SERIAL_USB->print("\t");
+    SERIAL_USB->print(timestamps_after[i]);
+    SERIAL_USB->print("\t");
+    SERIAL_USB->println(latency);
+    delayMicroseconds(SERIAL_PRINT_DELAY_US);
   }
   
   // Summary statistics
@@ -110,43 +125,43 @@ void setup() {
   uint32_t total_time = timestamps_after[NUM_WRITES-1] - timestamps_before[0];
   float throughput_kbps = (total_bytes * 1000.0) / total_time;
   
-  Serial.println(F("\n=== Summary ==="));
-  Serial.print(F("Total writes: "));
-  Serial.println(NUM_WRITES);
-  Serial.print(F("Buffer size: "));
-  Serial.print(BUFFER_SIZE);
-  Serial.println(F(" bytes"));
-  Serial.print(F("Total data: "));
-  Serial.print(total_bytes);
-  Serial.println(F(" bytes"));
-  Serial.print(F("Total time: "));
-  Serial.print(total_time);
-  Serial.println(F(" us"));
-  Serial.print(F("Sync time: "));
-  Serial.print(sync_end - sync_start);
-  Serial.println(F(" us"));
-  Serial.print(F("Average latency: "));
-  Serial.print(avg_latency);
-  Serial.println(F(" us"));
-  Serial.print(F("Min latency: "));
-  Serial.print(min_latency);
-  Serial.println(F(" us"));
-  Serial.print(F("Max latency: "));
-  Serial.print(max_latency);
-  Serial.println(F(" us"));
-  Serial.print(F("Throughput: "));
-  Serial.print(throughput_kbps);
-  Serial.println(F(" KB/s"));
+  SERIAL_USB->println(F("\n=== Summary ==="));
+  SERIAL_USB->print(F("Total writes: "));
+  SERIAL_USB->println(NUM_WRITES);
+  SERIAL_USB->print(F("Buffer size: "));
+  SERIAL_USB->print(BUFFER_SIZE);
+  SERIAL_USB->println(F(" bytes"));
+  SERIAL_USB->print(F("Total data: "));
+  SERIAL_USB->print(total_bytes);
+  SERIAL_USB->println(F(" bytes"));
+  SERIAL_USB->print(F("Total time: "));
+  SERIAL_USB->print(total_time);
+  SERIAL_USB->println(F(" us"));
+  SERIAL_USB->print(F("Sync time: "));
+  SERIAL_USB->print(sync_end - sync_start);
+  SERIAL_USB->println(F(" us"));
+  SERIAL_USB->print(F("Average latency: "));
+  SERIAL_USB->print(avg_latency);
+  SERIAL_USB->println(F(" us"));
+  SERIAL_USB->print(F("Min latency: "));
+  SERIAL_USB->print(min_latency);
+  SERIAL_USB->println(F(" us"));
+  SERIAL_USB->print(F("Max latency: "));
+  SERIAL_USB->print(max_latency);
+  SERIAL_USB->println(F(" us"));
+  SERIAL_USB->print(F("Throughput: "));
+  SERIAL_USB->print(throughput_kbps);
+  SERIAL_USB->println(F(" KB/s"));
   
-  Serial.println(F("\n=== All Timestamps (us) ==="));
+  SERIAL_USB->println(F("\n=== All Timestamps (us) ==="));
   for (int i = 0; i < NUM_WRITES; i++) {
-    Serial.print(timestamps_before[i]);
-    Serial.print(",");
-    Serial.println(timestamps_after[i]);
-    delayMicroseconds(10);
+    SERIAL_USB->print(timestamps_before[i]);
+    SERIAL_USB->print(",");
+    SERIAL_USB->println(timestamps_after[i]);
+    delayMicroseconds(SERIAL_PRINT_DELAY_US);
   }
   
-  Serial.println(F("\n=== Test Complete ==="));
+  SERIAL_USB->println(F("\n=== Test Complete ==="));
 }
 
 void loop() {

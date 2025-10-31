@@ -25,3 +25,6 @@
 [submodule "example_redboardartemis_XA1110/lib/SparkFun_I2C_GPS_Arduino_Library"]
 	path = example_redboardartemis_XA1110/lib/SparkFun_I2C_GPS_Arduino_Library
 	url = git@github.com:sparkfun/SparkFun_I2C_GPS_Arduino_Library.git
+[submodule "test_sdfat_speed_latency/lib/SdFat"]
+	path = test_sdfat_speed_latency/lib/SdFat
+	url = https://github.com/greiman/SdFat.git

@@ -35,6 +35,10 @@ void setup() {
   
   pinMode(PIN_PWR_LED, OUTPUT);
   pinMode(PIN_STAT_LED, OUTPUT);
+
+  SERIAL_USB->println(F("start delay..."));
+  delay(10000);
+  SERIAL_USB->println(F("... done"));
   
   SERIAL_USB->println(F("\n=== SDfat Speed & Latency Test ==="));
   SERIAL_USB->println(F("Testing with 512-byte buffers\n"));

@@ -37,3 +37,6 @@
 [submodule "template_ola_development/lib/kiss_clang_posix_time_utils"]
 	path = template_ola_development/lib/kiss_clang_posix_time_utils
 	url = https://github.com/jerabaul29/kiss_clang_posix_time_utils.git
+[submodule "template_ola_development/lib/Time"]
+	path = template_ola_development/lib/Time
+	url = https://github.com/PaulStoffregen/Time.git

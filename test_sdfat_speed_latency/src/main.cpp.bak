@@ -1,10 +1,15 @@
 #include <Arduino.h>
+#include <SPI.h>
+#include "SdFat.h"
 #include "firmware_configuration.h"
-#include "sd_card_manager.h"
 
 // Test configuration
 #define BUFFER_SIZE 512
 #define NUM_WRITES 10000
+
+// SD card objects
+SdFat sd;
+FsFile testFile;
 
 // Buffer for writing
 uint8_t buffer[BUFFER_SIZE];
@@ -31,7 +36,13 @@ void setup() {
   
   // Initialize SD card
   digitalWrite(PIN_STAT_LED, HIGH);
-  if (!sd_card_manager.start()) {
+  Serial.println("Initializing SD card...");
+  
+  SdSpiConfig sd_config{SD_CS_PIN, DEDICATED_SPI, SD_SCK_MHZ(SD_SPI_MHZ)};
+  
+  if (!sd.begin(sd_config)) {
+    Serial.println("ERROR: SD card initialization failed!");
+    Serial.println("Check that SD card is inserted properly");
     digitalWrite(PIN_STAT_LED, LOW);
     while (1) {
       digitalWrite(PIN_PWR_LED, HIGH);
@@ -41,20 +52,77 @@ void setup() {
     }
   }
   digitalWrite(PIN_STAT_LED, LOW);
+  Serial.println("SD card initialized successfully");
   
-  // Calculate preallocation size with 10% margin
-  uint32_t preallocSize = (uint32_t)NUM_WRITES * BUFFER_SIZE;
-  uint32_t margin = preallocSize / 10;
-  preallocSize += margin;
+  // Print card info
+  Serial.print("Card type: ");
+  switch (sd.card()->type()) {
+    case SD_CARD_TYPE_SD1:
+      Serial.println("SD1");
+      break;
+    case SD_CARD_TYPE_SD2:
+      Serial.println("SD2");
+      break;
+    case SD_CARD_TYPE_SDHC:
+      Serial.println("SDHC");
+      break;
+    default:
+      Serial.println("Unknown");
+  }
   
-  // Open and preallocate test file
-  if (!sd_card_manager.preallocate_and_open_file("LATENCY.BIN", preallocSize)) {
+  Serial.print("Volume type: FAT");
+  Serial.println(sd.vol()->fatType());
+  
+  // Open test file
+  if (testFile.isOpen()) {
+    testFile.close();
+  }
+  
+  Serial.println("Opening file...");
+  
+  // Try to remove old file first
+  if (sd.exists("LATENCY.BIN")) {
+    Serial.println("Removing old file...");
+    sd.remove("LATENCY.BIN");
+  }
+  
+  if (!testFile.open("LATENCY.BIN", O_RDWR | O_CREAT)) {
+    Serial.println("ERROR: Failed to open test file!");
+    Serial.print("Error code: ");
+    Serial.println(sd.card()->errorCode(), HEX);
+    Serial.print("Error data: ");
+    Serial.println(sd.card()->errorData(), HEX);
     while (1) {
       digitalWrite(PIN_PWR_LED, HIGH);
       delay(100);
       digitalWrite(PIN_PWR_LED, LOW);
       delay(100);
     }
+  }
+  
+  Serial.println("Test file opened: LATENCY.BIN");
+  
+  // Truncate file to zero before preallocation
+  if (!testFile.truncate(0)) {
+    Serial.println("WARNING: Failed to truncate file");
+  }
+  
+  // Preallocate file with margin (10000 writes * 512 bytes + 10% margin)
+  uint32_t preallocSize = (uint32_t)NUM_WRITES * BUFFER_SIZE;
+  uint32_t margin = preallocSize / 10;
+  preallocSize += margin;
+  
+  Serial.print("Preallocating ");
+  Serial.print(preallocSize);
+  Serial.println(" bytes...");
+  
+  if (!testFile.preAllocate(preallocSize)) {
+    Serial.println("WARNING: Failed to preallocate file!");
+    Serial.println("Continuing without preallocation...");
+    // Don't fail - continue without preallocation
+  } else {
+    Serial.println("File preallocated successfully");
+    testFile.sync();  // Ensure FAT is updated
   }
   
   Serial.print("Writing ");
@@ -65,15 +133,16 @@ void setup() {
   digitalWrite(PIN_PWR_LED, HIGH);
   for (int i = 0; i < NUM_WRITES; i++) {
     timestamps_before[i] = micros();
-    sd_card_manager.write_buffer(buffer, BUFFER_SIZE);
+    testFile.write(buffer, BUFFER_SIZE);
     timestamps_after[i] = micros();
   }
   
-  // Sync and close file
+  // Sync to ensure all data is written
   uint32_t sync_start = micros();
-  sd_card_manager.close_and_sync_file();
+  testFile.sync();
   uint32_t sync_end = micros();
   
+  testFile.close();
   digitalWrite(PIN_PWR_LED, LOW);
   
   // Calculate and display statistics
@@ -98,7 +167,6 @@ void setup() {
     Serial.print(timestamps_after[i]);
     Serial.print("\t");
     Serial.println(latency);
-    delayMicroseconds(10);
   }
   
   // Summary statistics
@@ -140,7 +208,6 @@ void setup() {
     Serial.print(timestamps_before[i]);
     Serial.print(",");
     Serial.println(timestamps_after[i]);
-    delayMicroseconds(10);
   }
   
   Serial.println("\n=== Test Complete ===");

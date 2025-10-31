@@ -19,7 +19,8 @@ public:
     // Close and sync the open file
     void close_and_sync_file();
     
-    // Write one 512 byte array to the file
+    // Write one byte array to the file
+    // If you want this to go fast, use an array of 512 bytes, which is a SD card memory page
     bool write_buffer(const uint8_t* buffer, size_t size);
     
     // Get the SD card object (for advanced operations)

@@ -41,6 +41,13 @@ static constexpr int PIN_DS18B20_PWR {};
 static constexpr int PIN_DS18B20_DAT {};
 
 //////////////////////////////////////////////////////////////////////////////////////////
+// SD Card
+
+static constexpr int SD_CS_PIN {23};
+static constexpr int SD_PWR {15};
+static constexpr int SD_SPI_MHZ {24};
+
+//////////////////////////////////////////////////////////////////////////////////////////
 // misc
 
 static constexpr char commit_id[] {STRINGIFY_CONTENT(REPO_COMMIT_ID)};

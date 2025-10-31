@@ -95,7 +95,7 @@ void TimeManager::print_status(void) const
   SERIAL_USB->println(F("- TimeManager -"));
   PRINTLN_VAR(posix_is_set)
   SERIAL_USB->print(F("posix_timestamp: "));
-  SERIAL_USB->print(get_posix_timestamp());
+  SERIAL_USB->print((unsigned long)get_posix_timestamp());
   SERIAL_USB->println();
   constexpr size_t utils_char_buffer_size{24};
   char utils_char_buffer[utils_char_buffer_size]{'\0'};

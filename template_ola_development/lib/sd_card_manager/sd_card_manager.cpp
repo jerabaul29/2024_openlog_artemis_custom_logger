@@ -16,11 +16,10 @@ SD_Card_Manager sd_card_manager;
  */
 void microSDPowerOn()
 {
-    delay(10);
     SERIAL_USB->println(F("Turning SD card power ON..."));
     pinMode(SD_PWR, OUTPUT);
     digitalWrite(SD_PWR, LOW);
-    delay(250);  // Wait for SD card to power up
+    delay(250);
 }
 
 /**
@@ -30,11 +29,8 @@ void microSDPowerOn()
  */
 void microSDPowerOff()
 {
-    delay(10);
-    SERIAL_USB->println(F("Turning SD card power OFF..."));
     pinMode(SD_PWR, OUTPUT);
     digitalWrite(SD_PWR, HIGH);
-    delay(10);
 }
 
 bool SD_Card_Manager::start() {
@@ -42,11 +38,17 @@ bool SD_Card_Manager::start() {
         return true;
     }
     
+    pinMode(SD_PWR, OUTPUT);
+    pinMode(SD_CS_PIN, OUTPUT);
+    digitalWrite(SD_CS_PIN, HIGH);
+    
+    delay(1);
+    
     microSDPowerOn();
     
     SERIAL_USB->println(F("Initializing SD card..."));
     
-    SdSpiConfig sd_config{SD_CS_PIN, DEDICATED_SPI, SD_SCK_MHZ(SD_SPI_MHZ)};
+    SdSpiConfig sd_config(SD_CS_PIN, DEDICATED_SPI, SD_SCK_MHZ(SD_SPI_MHZ));
     
     if (!sd_card.begin(sd_config)) {
         SERIAL_USB->println(F("ERROR: SD card initialization failed!"));

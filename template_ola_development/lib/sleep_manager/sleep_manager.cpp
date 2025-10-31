@@ -169,7 +169,7 @@ void sleep_until_posix(kiss_time_t const posix_timestamp)
 {
   if (USE_SERIAL_PRINT){
     SERIAL_USB->print(F("Sleep until posix "));
-    SERIAL_USB->println(posix_timestamp);
+    SERIAL_USB->println((unsigned long)posix_timestamp);
   }
 
   unsigned long number_seconds_to_sleep = seconds_to_sleep_until_posix(posix_timestamp);

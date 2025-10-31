@@ -5,7 +5,7 @@
 
 // Test configuration
 #define BUFFER_SIZE 512
-#define NUM_WRITES 100
+#define NUM_WRITES 10000
 
 // SD card objects
 SdFat sd;
@@ -54,13 +54,44 @@ void setup() {
   digitalWrite(PIN_STAT_LED, LOW);
   Serial.println("SD card initialized successfully");
   
+  // Print card info
+  Serial.print("Card type: ");
+  switch (sd.card()->type()) {
+    case SD_CARD_TYPE_SD1:
+      Serial.println("SD1");
+      break;
+    case SD_CARD_TYPE_SD2:
+      Serial.println("SD2");
+      break;
+    case SD_CARD_TYPE_SDHC:
+      Serial.println("SDHC");
+      break;
+    default:
+      Serial.println("Unknown");
+  }
+  
+  Serial.print("Volume type: FAT");
+  Serial.println(sd.vol()->fatType());
+  
   // Open test file
   if (testFile.isOpen()) {
     testFile.close();
   }
   
-  if (!testFile.open("LATENCY.BIN", O_WRONLY | O_CREAT | O_TRUNC)) {
+  Serial.println("Opening file...");
+  
+  // Try to remove old file first
+  if (sd.exists("LATENCY.BIN")) {
+    Serial.println("Removing old file...");
+    sd.remove("LATENCY.BIN");
+  }
+  
+  if (!testFile.open("LATENCY.BIN", O_RDWR | O_CREAT)) {
     Serial.println("ERROR: Failed to open test file!");
+    Serial.print("Error code: ");
+    Serial.println(sd.card()->errorCode(), HEX);
+    Serial.print("Error data: ");
+    Serial.println(sd.card()->errorData(), HEX);
     while (1) {
       digitalWrite(PIN_PWR_LED, HIGH);
       delay(100);
@@ -70,6 +101,29 @@ void setup() {
   }
   
   Serial.println("Test file opened: LATENCY.BIN");
+  
+  // Truncate file to zero before preallocation
+  if (!testFile.truncate(0)) {
+    Serial.println("WARNING: Failed to truncate file");
+  }
+  
+  // Preallocate file with margin (10000 writes * 512 bytes + 10% margin)
+  uint32_t preallocSize = (uint32_t)NUM_WRITES * BUFFER_SIZE;
+  uint32_t margin = preallocSize / 10;
+  preallocSize += margin;
+  
+  Serial.print("Preallocating ");
+  Serial.print(preallocSize);
+  Serial.println(" bytes...");
+  
+  if (!testFile.preAllocate(preallocSize)) {
+    Serial.println("WARNING: Failed to preallocate file!");
+    Serial.println("Continuing without preallocation...");
+    // Don't fail - continue without preallocation
+  } else {
+    Serial.println("File preallocated successfully");
+  }
+  
   Serial.print("Writing ");
   Serial.print(NUM_WRITES);
   Serial.println(" buffers...\n");

@@ -3,10 +3,9 @@
 #define __ISM330DHCXSensor_H__
 
 /* Includes ------------------------------------------------------------------*/
+#include "Wire.h"
 #include "SPI.h"
 #include "ism330dhcx_reg.h"
-#include "Arduino.h"
-#include "Wire.h"
 
 
 /* TypeDef -------------------------------------------------------------------*/
@@ -193,14 +192,15 @@ class ISM330DHCXSensor {
       }
 
       if (dev_i2c) {
-        Wire1.beginTransmission(0x6A);
-        Wire1.write(RegisterAddr);
-        Wire1.endTransmission(false);
+        dev_i2c->beginTransmission(address);
+        dev_i2c->write(RegisterAddr);
+        dev_i2c->endTransmission(false);
 
-        Wire1.requestFrom(0x6A, (uint8_t) NumByteToRead);
+        dev_i2c->requestFrom(address, (uint8_t) NumByteToRead);
+
         int i = 0;
-        while (Wire1.available()) {
-          pBuffer[i] = Wire1.read();
+        while (dev_i2c->available()) {
+          pBuffer[i] = dev_i2c->read();
           i++;
         }
 
@@ -239,14 +239,14 @@ class ISM330DHCXSensor {
       }
 
       if (dev_i2c) {
-        Wire1.beginTransmission(0x6A);
+        dev_i2c->beginTransmission(address);
 
-        Wire1.write(RegisterAddr);
+        dev_i2c->write(RegisterAddr);
         for (uint16_t i = 0 ; i < NumByteToWrite ; i++) {
-          Wire1.write(pBuffer[i]);
+          dev_i2c->write(pBuffer[i]);
         }
 
-        Wire1.endTransmission(true);
+        dev_i2c->endTransmission(true);
 
         return 0;
       }

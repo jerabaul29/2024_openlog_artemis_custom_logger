@@ -15,7 +15,6 @@ ISM330DHCXSensor::ISM330DHCXSensor(TwoWire *i2c, uint8_t address) : dev_i2c(i2c)
   reg_ctx.handle = (void *) this;
   acc_is_enabled = 0U;
   gyro_is_enabled = 0U;
-  Serial.println("ISM330DHCX I2C address set to: 0x" + String(address, HEX));
 }
 
 /** Constructor I2C

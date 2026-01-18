@@ -17,9 +17,6 @@
 // Includes
 #include <Arduino.h>
 #include <ISM330DHCXSensor.h>
-#include "Wire.h"
-
-TwoWire dev_interface = Wire1;
 
 #define SENSOR_ODR 52.0f // In Hertz
 #define ACC_FS 2 // In g
@@ -36,6 +33,9 @@ int32_t gyr_value[3];
 char buff[FLASH_BUFF_LEN];
 uint32_t pos = 0;
 ISM330DHCXStatusTypeDef retval;
+
+float acc_sensitivity;
+float gyr_sensitivity;
 
 uint8_t buffer_data[FLASH_BUFF_LEN];
 
@@ -100,6 +100,9 @@ void setup() {
   Serial.print("FIFO_Set_Mode: ");
   Serial.println(retval == ISM330DHCX_OK ? "OK" : "FAIL");
   delay(100);
+  
+  AccGyr.ACC_GetSensitivity(&acc_sensitivity);
+  AccGyr.GYRO_GetSensitivity(&gyr_sensitivity);
   
   Serial.println("ISM330DHCX FIFO Demo");
   Serial.println("Waiting for FIFO to fill...");

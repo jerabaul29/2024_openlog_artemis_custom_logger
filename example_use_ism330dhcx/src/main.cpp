@@ -28,8 +28,8 @@
 unsigned long timestamp_count = 0;
 bool acc_available = false;
 bool gyr_available = false;
-int32_t acc_value[3];
-int32_t gyr_value[3];
+int16_t acc_value[3];
+int16_t gyr_value[3];
 char buff[FLASH_BUFF_LEN];
 uint32_t pos = 0;
 ISM330DHCXStatusTypeDef retval;
@@ -53,7 +53,7 @@ void setup() {
   delay(100);
   Wire1.setClock(400000);
 
-  ISM330DHCXSensor AccGyr(&Wire1, 0x6A);
+  ISM330DHCXSensor AccGyr(&Wire1, ISM330DHCX_I2C_ADD_L);
   
   // Initialize IMU.
 
@@ -102,7 +102,14 @@ void setup() {
   delay(100);
   
   AccGyr.ACC_GetSensitivity(&acc_sensitivity);
+  Serial.print("ACC_Sensitivity: ");
+  Serial.print(acc_sensitivity);
+  Serial.println(" mg/LSB");
+
   AccGyr.GYRO_GetSensitivity(&gyr_sensitivity);
+  Serial.print("GYRO_Sensitivity: ");
+  Serial.print(gyr_sensitivity);
+  Serial.println(" mdps/LSB");
   
   Serial.println("ISM330DHCX FIFO Demo");
   Serial.println("Waiting for FIFO to fill...");
@@ -167,13 +174,13 @@ void Read_FIFO_Data(uint16_t samples_to_read, ISM330DHCXSensor& AccGyr)
     switch (tag) {
       // If we have a gyro tag, read the gyro data
       case ISM330DHCX_GYRO_NC_TAG: {
-          AccGyr.FIFO_GYRO_Get_Axes(gyr_value);
+          AccGyr.FIFO_GYRO_Get_AxesRaw(gyr_value);
           gyr_available = true;
           break;
         }
       // If we have an acc tag, read the acc data
       case ISM330DHCX_XL_NC_TAG: {
-          AccGyr.FIFO_ACC_Get_Axes(acc_value);
+          AccGyr.FIFO_ACC_Get_AxesRaw(acc_value);
           acc_available = true;
           break;
         }

@@ -39,6 +39,20 @@ ISM330DHCXSensor::ISM330DHCXSensor(SPIClass *spi, int cs_pin, uint32_t spi_speed
  */
 ISM330DHCXStatusTypeDef ISM330DHCXSensor::Init()
 {
+  /* Check sensor ID: this checks that we can communicate with the sensor */
+  uint8_t Id;
+
+  /* Get the Id; note this is not enough per se depending on the I2C implementation */
+  if (ReadID(&Id) != ISM330DHCX_OK) {
+    return ISM330DHCX_ERROR;
+  }
+
+  /* Check that we actually got back the right ID; this should return an error even if
+  the I2C implementation does not complain in case of no response. */
+  if (Id != ISM330DHCX_ID) {
+    return ISM330DHCX_ERROR;
+  }
+
   /* SW reset */
   if (ism330dhcx_reset_set(&(reg_ctx), PROPERTY_ENABLE) != ISM330DHCX_OK) {
     return ISM330DHCX_ERROR;
@@ -2164,6 +2178,26 @@ ISM330DHCXStatusTypeDef ISM330DHCXSensor::FIFO_ACC_Get_Axes(int32_t *Acceleratio
 }
 
 /**
+ * @brief  Get the ISM330DHCX FIFO accelero single sample (16-bit data per 3 axes) raw data
+ * @param  Acceleration FIFO accelerometer raw axes reading
+ * @retval 0 in case of success, an error code otherwise
+ */
+ISM330DHCXStatusTypeDef ISM330DHCXSensor::FIFO_ACC_Get_AxesRaw(int16_t *AccelerationRaw)
+{
+  uint8_t data[6];
+
+  if (FIFO_Get_Data(data) != ISM330DHCX_OK) {
+    return ISM330DHCX_ERROR;
+  }
+
+  AccelerationRaw[0] = ((int16_t)data[1] << 8) | data[0];
+  AccelerationRaw[1] = ((int16_t)data[3] << 8) | data[2];
+  AccelerationRaw[2] = ((int16_t)data[5] << 8) | data[4];
+
+  return ISM330DHCX_OK;
+}
+
+/**
  * @brief  Get the ISM330DHCX FIFO gyro single sample (16-bit data per 3 axes) and calculate angular velocity [mDPS]
  * @param  AngularVelocity FIFO gyroscope axes [mDPS]
  * @retval 0 in case of success, an error code otherwise
@@ -2194,6 +2228,26 @@ ISM330DHCXStatusTypeDef ISM330DHCXSensor::FIFO_GYRO_Get_Axes(int32_t *AngularVel
   AngularVelocity[0] = (int32_t)angular_velocity_float[0];
   AngularVelocity[1] = (int32_t)angular_velocity_float[1];
   AngularVelocity[2] = (int32_t)angular_velocity_float[2];
+
+  return ISM330DHCX_OK;
+}
+
+/**
+ * @brief  Get the ISM330DHCX FIFO gyro single sample (16-bit data per 3 axes) raw data
+ * @param  AngularVelocity FIFO gyroscope raw axes reading
+ * @retval 0 in case of success, an error code otherwise
+ */
+ISM330DHCXStatusTypeDef ISM330DHCXSensor::FIFO_GYRO_Get_AxesRaw(int16_t *AngularVelocityRaw)
+{
+  uint8_t data[6];
+
+  if (FIFO_Get_Data(data) != ISM330DHCX_OK) {
+    return ISM330DHCX_ERROR;
+  }
+
+  AngularVelocityRaw[0] = ((int16_t)data[1] << 8) | data[0];
+  AngularVelocityRaw[1] = ((int16_t)data[3] << 8) | data[2];
+  AngularVelocityRaw[2] = ((int16_t)data[5] << 8) | data[4];
 
   return ISM330DHCX_OK;
 }

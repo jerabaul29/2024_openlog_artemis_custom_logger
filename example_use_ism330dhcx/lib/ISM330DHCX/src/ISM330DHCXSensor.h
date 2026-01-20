@@ -152,7 +152,9 @@ class ISM330DHCXSensor {
     ISM330DHCXStatusTypeDef FIFO_Get_Tag(uint8_t *Tag);
     ISM330DHCXStatusTypeDef FIFO_Get_Data(uint8_t *Data);
     ISM330DHCXStatusTypeDef FIFO_ACC_Get_Axes(int32_t *Acceleration);
+    ISM330DHCXStatusTypeDef FIFO_ACC_Get_AxesRaw(int16_t *AccelerationRaw);
     ISM330DHCXStatusTypeDef FIFO_GYRO_Get_Axes(int32_t *AngularVelocity);
+    ISM330DHCXStatusTypeDef FIFO_GYRO_Get_AxesRaw(int16_t *AngularVelocityRaw);
 
     ISM330DHCXStatusTypeDef ACC_Enable_DRDY_On_INT1();
     ISM330DHCXStatusTypeDef ACC_Disable_DRDY_On_INT1();
@@ -192,11 +194,11 @@ class ISM330DHCXSensor {
       }
 
       if (dev_i2c) {
-        dev_i2c->beginTransmission(address);
+        dev_i2c->beginTransmission(((uint8_t)(((address) >> 1) & 0x7F)));
         dev_i2c->write(RegisterAddr);
         dev_i2c->endTransmission(false);
 
-        dev_i2c->requestFrom(address, (uint8_t) NumByteToRead);
+        dev_i2c->requestFrom(((uint8_t)(((address) >> 1) & 0x7F)), (uint8_t) NumByteToRead);
 
         int i = 0;
         while (dev_i2c->available()) {
@@ -239,7 +241,7 @@ class ISM330DHCXSensor {
       }
 
       if (dev_i2c) {
-        dev_i2c->beginTransmission(address);
+        dev_i2c->beginTransmission(((uint8_t)(((address) >> 1) & 0x7F)));
 
         dev_i2c->write(RegisterAddr);
         for (uint16_t i = 0 ; i < NumByteToWrite ; i++) {
